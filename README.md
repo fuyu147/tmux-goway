@@ -22,14 +22,17 @@ rien si aucune session de ce type n'existe:
 tmux-goway -p
 ```
 
-# Configuration
-
-Le fichier par défaut devrait être placé à
-`$XDG_CONFIG_DIR/tmux-goway/config.toml`, un autre endroit peut être donné en
-ajoutant le flag `-c`:
+Un chemin custom pour la configuration peut être donné avec `-c`:
 ```
 tmux-goway -c $HOME/.dotfiles/config/some-file.toml
 ```
+
+# Configuration
+
+`tmux-goway` regardera à ces endroits en autre de priorité:
+- chemin donné par `-c`
+- `$XDG_CONFIG_DIR/tmux-goway/config.toml` (si `-c` n'est pas donné)
+- `$HOME/.config/tmux-goway/config.toml` (si `XDG_CONFIG_DIR` n'est pas défini)
 
 Le fichier doit être au format TOML, exemple:
 ```toml
