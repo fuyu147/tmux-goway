@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"path/filepath"
 	"tmux-goway/configuration"
 	"tmux-goway/session"
 )
@@ -34,7 +35,7 @@ func main() {
 
 	userSelected := ""
 	if len(args) == 1 {
-		userSelected = args[0]
+		userSelected, _ = filepath.Abs(args[0])
 		if cfg.Verbose {
 			fmt.Printf("Select: ARG <%s>\n", userSelected)
 		}
@@ -54,6 +55,7 @@ func main() {
 		}
 		return
 	}
+	fmt.Println(userSelected)
 
 	if userSelected == "" {
 		fmt.Println("nothing selected")
