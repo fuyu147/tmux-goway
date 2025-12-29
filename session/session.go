@@ -30,14 +30,25 @@ func Sanity() bool {
 	return TMUXInstalled && FZFInstalled
 }
 
-func SwitchTo(cfg configuration.Config, session string) error {
+func SwitchTo(cfg configuration.Config, session string, sessionPath string) error {
 	var cmd *exec.Cmd
 
-	tmuxRunning := isTmuxRunning()
+	tmuxServerRunning := isTmuxRunning()
+	insideTmux := os.Getenv("TMUX") != ""
+
 	if cfg.Verbose {
-		fmt.Println("Tmux running: ", tmuxRunning)
+		fmt.Println("SwitchTo: Tmux running: ", tmuxServerRunning)
+		fmt.Println("SwitchTo: Inside Tmux")
 	}
-	if tmuxRunning {
+
+	if !HasSession(session) {
+		err := exec.Command("tmux", "new-session", "-ds", session, "-c", sessionPath).Run()
+		if err != nil {
+			return err
+		}
+	}
+
+	if insideTmux {
 		cmd = exec.Command("tmux", "switch-client", "-t", session)
 	} else {
 		cmd = exec.Command("tmux", "attach-session", "-t", session)
@@ -121,17 +132,25 @@ func HasSession(session string) bool {
 	return err == nil
 }
 
-func GetSessionName(selected string) (string, string) {
+func GetSessionName(cfg configuration.Config, selected string) (string, string) {
 	if strings.HasPrefix(selected, "[TMUX] ") {
 		sessionName := selected[7:]
 		return sessionName, ""
 	} else {
-		path := selected
+		path := filepath.Clean(selected)
+
 		parent := filepath.Base(filepath.Dir(path))
 		child := filepath.Base(path)
+
+		if cfg.Verbose {
+			fmt.Printf("GetSessionName: parent %s, child %s\n", parent, child)
+		}
+
 		parent = strings.ReplaceAll(parent, ".", "_")
 		child = strings.ReplaceAll(child, ".", "_")
+
 		sessionName := parent + "_" + child
+
 		return sessionName, path
 	}
 }

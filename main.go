@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"os/exec"
 	"tmux-goway/configuration"
 	"tmux-goway/session"
 )
@@ -50,7 +49,9 @@ func main() {
 			fmt.Printf("Select: FZF <%s>\n", userSelected)
 		}
 	} else {
-		fmt.Println("Too many args passed.")
+		if cfg.Verbose {
+			fmt.Println("Too many args passed.")
+		}
 		return
 	}
 
@@ -59,25 +60,12 @@ func main() {
 		return
 	}
 
-	fmt.Println(userSelected)
-
-	sessionName, path := session.GetSessionName(userSelected)
+	sessionName, sessionPath := session.GetSessionName(cfg, userSelected)
 	if cfg.Verbose {
-		fmt.Printf("Session name: %s, Path: %s\n", sessionName, path)
+		fmt.Printf("Session name: %s, Path: %s\n", sessionName, sessionPath)
 	}
 
-	if !session.HasSession(sessionName) {
-		cmd := exec.Command("tmux", "new-session", "-ds", sessionName)
-		if path != "" {
-			cmd.Args = append(cmd.Args, "-c", path)
-		}
-		err := cmd.Run()
-		if err != nil {
-			panic(err)
-		}
-	}
-
-	err := session.SwitchTo(cfg, sessionName)
+	err := session.SwitchTo(cfg, sessionName, sessionPath)
 	if err != nil {
 		panic(err)
 	}
