@@ -30,11 +30,13 @@ func Sanity() bool {
 	return TMUXInstalled && FZFInstalled
 }
 
-func SwitchTo(session string) error {
+func SwitchTo(cfg configuration.Config, session string) error {
 	var cmd *exec.Cmd
 
 	tmuxRunning := isTmuxRunning()
-	fmt.Println("Tmux running: ", tmuxRunning)
+	if cfg.Verbose {
+		fmt.Println("Tmux running: ", tmuxRunning)
+	}
 	if tmuxRunning {
 		cmd = exec.Command("tmux", "switch-client", "-t", session)
 	} else {

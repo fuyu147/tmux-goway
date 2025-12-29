@@ -2,10 +2,21 @@
 
 Réadaptation de `tmux-sessionizer` de @ThePrimeagen en Go.
 
+# Utilisation
+
+Par défault, `tmux-goway` va amené un menu avec `fzf`, puis va attacher à une
+session `tmux` si elle existe ou la créé.
+```
+tmux-goway
+```
+
+En ajoutant `-p` ou `--previous`, `tmux-goway` changera pour la précédente
+session.
+
 # Configuration
 
 Le fichier par défault devrait être placé à `$XDG_CONFIG_DIR/tmux-goway/config.toml`,
-un autre endroit peut être donné à l'aide du flag `-c`:
+un autre endroit peut être donné en ajoutant le flag `-c`:
 ```
 tmux-goway -c $HOME/.dotfiles/config/some-file.toml
 ```

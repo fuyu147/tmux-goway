@@ -20,14 +20,12 @@ func main() {
 
 	args := os.Args
 
-	for i, a := range args {
-		fmt.Printf("Arg: [%d] %s\n", i, a)
-	}
-
 	userSelected := ""
 	if len(args) == 2 {
 		userSelected = args[1]
-		fmt.Printf("Select: ARG <%s>\n", userSelected)
+		if cfg.Verbose {
+			fmt.Printf("Select: ARG <%s>\n", userSelected)
+		}
 	} else if len(args) == 1 {
 		selected, err := session.GetSelection(cfg)
 		if err != nil {
@@ -35,7 +33,12 @@ func main() {
 		}
 
 		userSelected = selected
-		fmt.Printf("Select: FZF <%s>\n", userSelected)
+		if cfg.Verbose {
+			fmt.Printf("Select: FZF <%s>\n", userSelected)
+		}
+	} else {
+		fmt.Println("Too many args passed.")
+		return
 	}
 
 	if userSelected == "" {
@@ -46,7 +49,9 @@ func main() {
 	fmt.Println(userSelected)
 
 	sessionName, path := session.GetSessionName(userSelected)
-	fmt.Printf("Session name: %s, Path: %s\n", sessionName, path)
+	if cfg.Verbose {
+		fmt.Printf("Session name: %s, Path: %s\n", sessionName, path)
+	}
 
 	if !session.HasSession(sessionName) {
 		cmd := exec.Command("tmux", "new-session", "-ds", sessionName)
@@ -59,7 +64,7 @@ func main() {
 		}
 	}
 
-	err := session.SwitchTo(sessionName)
+	err := session.SwitchTo(cfg, sessionName)
 	if err != nil {
 		panic(err)
 	}

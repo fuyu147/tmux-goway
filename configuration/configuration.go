@@ -10,6 +10,7 @@ type Config struct {
 	SearchPaths []string
 	MaxDepth    int
 	FzfFlags    string
+	Verbose     bool
 }
 
 // Le fichier de configuration doit être en format TOML avec ces clés:
