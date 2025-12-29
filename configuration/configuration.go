@@ -13,15 +13,7 @@ type Config struct {
 	Verbose     bool
 }
 
-// Le fichier de configuration doit être en format TOML avec ces clés:
-//   - `maxdepth` est un `int`
-//   - `searchpaths` est une liste de string
-//
-// Exemple:
-//
-//	maxdepth = 2
-//	searchpaths = [ "~", "~/Documents", "~/Desktop" ]
-//	fzfflags = "--tmux=top,100%,40%"
+// Le fichier de configuration doit être conforme au format indiqué dans le README.md.
 //
 // La configuration:
 //   - utilise le `configPath` fourni si donné
