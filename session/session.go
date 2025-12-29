@@ -85,14 +85,11 @@ func HandlePreviousSession() {
 	}
 
 	if os.Getenv("TMUX") != "" {
-		// on est dans TMUX, switch utilisant `tmux switch-client -l`
 		err := exec.Command("tmux", "switch-client", "-l").Run()
 		if err != nil {
 			fmt.Println("Failed to switch to previous session")
 		}
 	} else {
-		// on est en dehors de TMUX, switch pour la session la plus récente
-
 		cmd := exec.Command(
 			"sh",
 			"-c",
