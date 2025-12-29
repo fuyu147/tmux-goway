@@ -10,8 +10,11 @@ session `tmux` si elle existe ou la créé.
 tmux-goway
 ```
 
-En ajoutant `-p` ou `--previous`, `tmux-goway` changera pour la précédente
-session.
+En ajoutant `-p`, `tmux-goway` changera pour la précédente
+session:
+```
+tmux-goway -p
+```
 
 # Configuration
 

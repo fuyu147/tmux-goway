@@ -12,7 +12,14 @@ func main() {
 	if !session.Sanity() {
 		return
 	}
-	cfg := configuration.GetConfig("")
+
+	previous := flag.Bool("p", false, "Switch to previous session")
+	configPath := flag.String("c", "", "Custom config path")
+	flag.Parse()
+
+	args := flag.Args()
+
+	cfg := configuration.GetConfig(*configPath)
 
 	if cfg.Verbose {
 		fmt.Println("Config.SearchPaths:", cfg.SearchPaths)
@@ -20,11 +27,6 @@ func main() {
 		fmt.Println("Config.FzfFlags:", cfg.FzfFlags)
 		fmt.Println("Config.Verbose:", cfg.Verbose)
 	}
-
-	previous := flag.Bool("p", false, "Switch to previous session")
-	flag.Parse()
-
-	args := flag.Args()
 
 	if *previous && len(args) == 0 {
 		session.HandlePreviousSession()
