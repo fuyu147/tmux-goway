@@ -35,10 +35,14 @@ func main() {
 
 	userSelected := ""
 	if len(args) == 1 {
-		userSelected, _ = filepath.Abs(args[0])
-		if cfg.Verbose {
-			fmt.Printf("Select: ARG <%s>\n", userSelected)
+		selected, err := filepath.Abs(args[0])
+		if err != nil {
+			panic("main(): Can't convert path to an absolute path")
 		}
+		if cfg.Verbose {
+			fmt.Printf("Select: ARG <%s>\n", selected)
+		}
+		userSelected = selected
 	} else if len(args) == 0 {
 		selected, err := session.GetSelection(cfg)
 		if err != nil {
@@ -55,7 +59,6 @@ func main() {
 		}
 		return
 	}
-	fmt.Println(userSelected)
 
 	if userSelected == "" {
 		fmt.Println("nothing selected")
