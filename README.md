@@ -1,6 +1,12 @@
 # Tmux-goway
 
-Réadaptation de `tmux-sessionizer` de @ThePrimeagen en Go.
+Un outil CLI pour switcher entre des sessions TMUX (ou en créé des nouvelles).
+Grandement inspiré de `tmux-sessionizer` par https://github.com/ThePrimeagen en
+Go.
+
+# Installation
+
+Se référé au ![[Makefile]]
 
 # Utilisation
 
@@ -11,7 +17,7 @@ tmux-goway
 ```
 
 En ajoutant `-p`, `tmux-goway` changera pour la précédente
-session:
+session, ne fera rien si aucune session existe:
 ```
 tmux-goway -p
 ```
