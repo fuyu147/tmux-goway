@@ -1,8 +1,8 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"os"
 	"os/exec"
 	"tmux-goway/configuration"
 	"tmux-goway/session"
@@ -14,19 +14,30 @@ func main() {
 	}
 	cfg := configuration.GetConfig("")
 
-	fmt.Println("Config.SearchPaths:", cfg.SearchPaths)
-	fmt.Println("Config.MaxDepth:", cfg.MaxDepth)
-	fmt.Println("Config.FzfFlags:", cfg.FzfFlags)
+	if cfg.Verbose {
+		fmt.Println("Config.SearchPaths:", cfg.SearchPaths)
+		fmt.Println("Config.MaxDepth:", cfg.MaxDepth)
+		fmt.Println("Config.FzfFlags:", cfg.FzfFlags)
+		fmt.Println("Config.Verbose:", cfg.Verbose)
+	}
 
-	args := os.Args
+	previous := flag.Bool("p", false, "Switch to previous session")
+	flag.Parse()
+
+	args := flag.Args()
+
+	if *previous && len(args) == 0 {
+		session.HandlePreviousSession()
+		return
+	}
 
 	userSelected := ""
-	if len(args) == 2 {
-		userSelected = args[1]
+	if len(args) == 1 {
+		userSelected = args[0]
 		if cfg.Verbose {
 			fmt.Printf("Select: ARG <%s>\n", userSelected)
 		}
-	} else if len(args) == 1 {
+	} else if len(args) == 0 {
 		selected, err := session.GetSelection(cfg)
 		if err != nil {
 			panic(err)

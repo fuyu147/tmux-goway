@@ -68,7 +68,52 @@ func GetSelection(cfg configuration.Config) (string, error) {
 }
 
 func HandlePreviousSession() {
+	if !isTmuxRunning() {
+		fmt.Println("TMUX is not running, cannot switch to previous session.")
+		return
+	}
 
+	if os.Getenv("TMUX") != "" {
+		// on est dans TMUX, switch utilisant `tmux switch-client -l`
+		err := exec.Command("tmux", "switch-client", "-l").Run()
+		if err != nil {
+			fmt.Println("Failed to switch to previous session")
+		}
+	} else {
+		// on est en dehors de TMUX, switch pour la session la plus récente
+
+		cmd := exec.Command(
+			"sh",
+			"-c",
+			`tmux list-sessions -F '#{session_activity} #{session_name}' | sort -rn | head -n 1 | cut -d' ' -f2-`,
+		)
+
+		var out bytes.Buffer
+		cmd.Stdout = &out
+		cmd.Stderr = os.Stderr
+
+		if err := cmd.Run(); err != nil {
+			fmt.Fprintln(os.Stderr, "Failed to list tmux sessions:", err)
+			os.Exit(1)
+		}
+
+		lastSession := strings.TrimSpace(out.String())
+		if lastSession == "" {
+			fmt.Println("No previous session to attach to.")
+			os.Exit(1)
+		}
+
+		attach := exec.Command("tmux", "attach-session", "-t", lastSession)
+		attach.Stdin = os.Stdin
+		attach.Stdout = os.Stdout
+		attach.Stderr = os.Stderr
+
+		if err := attach.Run(); err != nil {
+			fmt.Fprintln(os.Stderr, "Failed to attach session:", err)
+			os.Exit(1)
+		}
+
+	}
 }
 
 func HasSession(session string) bool {
@@ -95,7 +140,7 @@ func isTmuxRunning() bool {
 	isInTmuxSession := os.Getenv("TMUX") != ""
 	err := exec.Command("pgrep", "tmux").Run()
 	tmuxIsRunning := err == nil
-	return isInTmuxSession && tmuxIsRunning
+	return isInTmuxSession || tmuxIsRunning
 }
 
 func findDirs(cfg configuration.Config, w io.Writer) {
