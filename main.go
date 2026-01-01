@@ -61,7 +61,9 @@ func main() {
 	}
 
 	if userSelected == "" {
-		fmt.Println("nothing selected")
+		if cfg.Verbose {
+			fmt.Println("nothing selected")
+		}
 		return
 	}
 
