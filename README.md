@@ -1,8 +1,8 @@
 # Tmux-goway
 
 Un outil CLI pour basculer entre des sessions TMUX (ou en créer de nouvelles).
-Grandement inspiré de `tmux-sessionizer` par
-[ThePrimeagen](https://github.com/ThePrimeagen) en Go.
+Grandement inspiré de [tmux-sessionizer](https://github.com/ThePrimeagen/tmux-sessionizer) par
+[ThePrimeagen](https://github.com/ThePrimeagen).
 
 # Installation
 
@@ -11,7 +11,7 @@ Référez-vous au [Makefile](./Makefile)
 # Utilisation
 
 Par défaut, `tmux-goway` affichera un menu `fzf`, puis s'attachera à une session
-`tmux` existante ou en créera une nouvelle.
+`tmux` existante ou en créera une nouvelle au chemin sélectionné par FZF.
 ```
 tmux-goway
 ```
@@ -22,22 +22,21 @@ rien si aucune session de ce type n'existe:
 tmux-goway -p
 ```
 
-Un chemin custom pour la configuration peut être donné avec `-c`:
+Un chemin de configuration custom peut être donné avec `-c`:
 ```
 tmux-goway -c $HOME/.dotfiles/config/some-file.toml
 ```
 
 # Configuration
-
 `tmux-goway` regardera à ces endroits en autre de priorité:
 - chemin donné par `-c`
-- `$XDG_CONFIG_DIR/tmux-goway/config.toml` (si `-c` n'est pas donné)
-- `$HOME/.config/tmux-goway/config.toml` (si `XDG_CONFIG_DIR` n'est pas défini)
+- `$XDG_CONFIG_DIR/tmux-goway/config.toml`
+- `$OME/.config/tmux-goway/config.toml`
 
-Le fichier doit être au format TOML, exemple:
+Le fichier doit être au format TOML, par exemple:
 ```toml
-searchpaths = [ "~/", "~/desk" ]
-maxdepth    = 2
+searchpaths = [ "~/personal", "~/proj", "~/art", "/run/media/user/œstrogen" ] # paths looked
+maxdepth    = 2 # max depth to look for subdirectories
 fzfflags    = "--tmux=top,80%,50%"
 ```
 
