@@ -8,10 +8,11 @@ import (
 )
 
 type Config struct {
-	SearchPaths []string
-	MaxDepth    int
-	FzfFlags    string
-	Verbose     bool
+	SearchPaths    []string
+	MaxDepth       int
+	FzfFlags       string
+	Verbose        bool
+	IgnoreDotfiles bool
 }
 
 // Le fichier de configuration doit être conforme au format indiqué dans le README.md.

@@ -26,6 +26,7 @@ func main() {
 		fmt.Println("Config.MaxDepth:", cfg.MaxDepth)
 		fmt.Println("Config.FzfFlags:", cfg.FzfFlags)
 		fmt.Println("Config.Verbose:", cfg.Verbose)
+		fmt.Println("Config.IgnoreDotfiles:", cfg.IgnoreDotfiles)
 	}
 
 	if *previous && len(args) == 0 {

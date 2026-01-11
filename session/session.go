@@ -178,7 +178,7 @@ func findDirs(cfg configuration.Config, w io.Writer) {
 			continue
 		}
 
-		walkWithDepth(w, path, depth)
+		walkWithDepth(w, cfg, path, depth)
 	}
 }
 
@@ -211,17 +211,18 @@ func printTmuxSessions(w io.Writer) {
 	}
 }
 
-func walkWithDepth(w io.Writer, root string, maxDepth int) {
+func walkWithDepth(w io.Writer, cfg configuration.Config, root string, maxDepth int) {
 	rootDepth := strings.Count(filepath.Clean(root), string(os.PathSeparator))
 
 	filepath.WalkDir(root, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error walking path %s: %v\n", path, err)
-			return nil
+			return err
 		}
 
 		if d.IsDir() {
-			if d.Name() == ".git" || d.Name() == ".cache" {
+			skipDotfiles := cfg.IgnoreDotfiles && strings.HasPrefix(d.Name(), ".")
+			if skipDotfiles || d.Name() == ".git" || d.Name() == ".cache" {
 				return filepath.SkipDir
 			}
 
