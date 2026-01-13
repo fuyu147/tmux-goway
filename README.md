@@ -28,7 +28,7 @@ tmux-goway -c $HOME/.dotfiles/config/some-file.toml
 ```
 
 # Configuration
-`tmux-goway` regardera à ces endroits en autre de priorité:
+`tmux-goway` regardera à ces endroits en ordre de priorité:
 - chemin donné par `-c`
 - `$XDG_CONFIG_DIR/tmux-goway/config.toml`
 - `$OME/.config/tmux-goway/config.toml`
