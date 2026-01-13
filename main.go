@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 	"path/filepath"
 	"tmux-goway/configuration"
 	"tmux-goway/session"
@@ -36,14 +37,22 @@ func main() {
 
 	userSelected := ""
 	if len(args) == 1 {
-		selected, err := filepath.Abs(args[0])
+		selectedPath, err := filepath.Abs(args[0])
 		if err != nil {
-			panic("main(): Can't convert path to an absolute path")
+			panic("main(): Can't convert selectedPath to an absolute path")
 		}
 		if cfg.Verbose {
-			fmt.Printf("Select: ARG <%s>\n", selected)
+			fmt.Printf("Select: ARG <%s>\n", selectedPath)
 		}
-		userSelected = selected
+		fileinfo, err := os.Stat(selectedPath)
+		if err != nil {
+			panic("main(): Can't get Fileinfo of selectedPath")
+		}
+		if !fileinfo.IsDir() {
+			panic("main(): selectedPath is not a directory")
+		}
+
+		userSelected = selectedPath
 	} else if len(args) == 0 {
 		selected, err := session.GetSelection(cfg)
 		if err != nil {
