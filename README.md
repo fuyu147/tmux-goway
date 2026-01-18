@@ -31,7 +31,7 @@ tmux-goway -c $HOME/.dotfiles/config/some-file.toml
 `tmux-goway` regardera à ces endroits en ordre de priorité:
 - chemin donné par `-c`
 - `$XDG_CONFIG_DIR/tmux-goway/config.toml`
-- `$OME/.config/tmux-goway/config.toml`
+- `$HOME/.config/tmux-goway/config.toml`
 
 Le fichier doit être au format TOML, par exemple:
 ```toml
